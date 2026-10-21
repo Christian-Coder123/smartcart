@@ -1,0 +1,19 @@
+we're going to develop a web-based library mngt system using python, flask and mysql.
+purpose: develop a wb based library mngt system that allows a librarian to manage books, register members, issue books, and monitor library activities through a frontend connected to a python flask backend and mysql db.
+ required techs: frontend: html, css, js. backend: python and flask. db: mysql. db server: xampp
+ minimum functional requirements: the system should allow the user to: add a book, view all books, search for a book, view details of a book, delete a book.
+ book info: bookid, booktitle, author, category, isbn, quantity, publisher, dateadded.
+ member mngt: the system should allow the librarian to register a library mamber, view all members, search for a member, view member details, update member info, delete a member.
+  each member should have at least a memberid, fullname, registeration number, telephone, email, date registered.
+library operations:: the system should allow the librarian to perform the following operations: book issue: record a book issued to a member, the system should record the issue date and the expected return date.
+book return: record a book returned by a member. the system should automatically update the available quantity.
+
+dashboard. crate a simple dashboard showing information such as: total books , total members, available books, books currently issued, overdue books.
+db requirement. create an appropriate mysql sb and tables, at minimum books, members, borrowing/transctions.
+ the db design should use appropriate primary keys, foreign keys, data types, constraints.
+  the borrowing/transction table should maintain the relationship btn books and members.
+   backend requirements::add book, view books, search books, update book, delete book, add member, view member, search member, update member, delete member, issue book, return book, view borrowing transactions, view dashboard information.
+    front end requirements:: dashboard, add book, book list, edit book, member registration, member list, edit member, issue book, return book, borrowing history, search.
+    the forntend should communicate with the flask rathen than directly accessing mysql.
+
+    i think the quantity should be the books that are currently available.2 14 days that can be overriden. 3.  yes, all of them. 4. whatever is good. 5. leave them out. the usual

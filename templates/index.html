@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartCart | Amazon product search</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">S</span> SmartCart</a>
+      <form action="{{ url_for('search') }}" method="post" class="search-form">
+        <div class="search-row">
+          <input id="product_name" name="product_name" value="{{ query }}" maxlength="150"
+                 placeholder="Search Amazon products" aria-label="Product name" required>
+          <button type="submit">Search</button>
+        </div>
+      </form>
+      <span class="topbar-note">Amazon products, plus a clear total</span>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <section class="messages" aria-live="polite">
+          {% for category, message in messages %}
+            <p class="message {{ category }}">{{ message }}</p>
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endwith %}
+
+    {% if products is not none %}
+      <section class="results">
+        <div class="results-heading">
+          <div>
+            <h1>{{ products|length }} finds for “{{ query }}”</h1>
+            <p class="result-meta">Prices in USD <span class="source-badge">{{ source }}</span></p>
+          </div>
+          {% if excel_filename %}
+            <a class="download" href="{{ url_for('download_excel', filename=excel_filename) }}">
+              <span aria-hidden="true">↓</span> Download Excel
+            </a>
+          {% endif %}
+        </div>
+        {% if products %}
+          <div class="product-grid">
+            {% for product in products %}
+              <article class="product-card">
+                <div class="product-image">
+                  {% if product.Product_picture_name != "Not available" %}
+                    <img src="{{ url_for('product_picture', filename=product.Product_picture_name) }}"
+                         alt="{{ product.Product_Name }}" loading="lazy">
+                  {% else %}
+                    <div class="image-placeholder" aria-label="Product image unavailable">Image unavailable</div>
+                  {% endif %}
+                </div>
+                <div class="product-content">
+                  <div class="product-meta">
+                    <span>{{ product.retailer_name }}</span>
+                    <span class="rating">
+                      {% if product.global_rating != "Not available" %}★ {{ product.global_rating }}{% else %}No rating{% endif %}
+                    </span>
+                  </div>
+                  <h2 class="product-name">{{ product.Product_Name }}</h2>
+                  <div class="price-line">
+                    <div>
+                      <span class="price-label">Product price</span>
+                      <strong class="product-price">${{ "%.2f"|format(product.Product_Price) }}</strong>
+                    </div>
+                    <span class="fee">+ ${{ "%.2f"|format(product.Commission_fee) }} fee</span>
+                  </div>
+                  <div class="total-line">
+                    <span>Your total</span>
+                    <strong>${{ "%.2f"|format(product.Total_price) }}</strong>
+                  </div>
+                  <p class="product-footnote">
+                    Retailer email: {{ product.Retailer_email }}
+                    <span aria-hidden="true">·</span>
+                    {{ product.Product_picture_name }}
+                  </p>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <h2>No priced products found</h2>
+            <p>Try a different product name. Search results without a listed price cannot be included.</p>
+          </div>
+        {% endif %}
+      </section>
+    {% else %}
+      <section class="welcome">
+        <p class="eyebrow">SMARTCART SOLUTIONS</p>
+        <h1>Find it on Amazon.<br><span>Know your full price.</span></h1>
+        <p>Search a product to see listings, ratings, and the 10% commission included in your total.</p>
+      </section>
+    {% endif %}
+    <footer>
+      Excel results are saved to your Desktop as {{ excel_filename or "YourFirstName_LastName_RegistrationNumber.xlsx" }}.
+      Product pictures are saved in <code>Online_Pictures</code>. Prices and availability may change.
+    </footer>
+  </main>
+</body>
+</html>
